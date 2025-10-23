@@ -84,7 +84,8 @@ This project builds an **end-to-end NLP pipeline** to classify AI-generated answ
 
 ## 🏆 Authors
 **Team:** Georgia Tech 
-**Members:** Subhajit Bag, Sohan Pradhan, Aditya Ghosh, Deepak Alagusubramanian
+
+**Members:** Subhajit Bag, Soham Pradhan, Aditya Ghosh, Deepak Alagusubramanian
 
 ---
 
