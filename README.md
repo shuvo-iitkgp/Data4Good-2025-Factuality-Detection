@@ -61,3 +61,40 @@ This project builds an **end-to-end NLP pipeline** to classify AI-generated answ
 
 ## 📁 Repository Structure
 
+├── data/
+│ ├── train.json
+│ ├── test.json
+├── notebooks/
+│ ├── 01_EDA_and_Baseline.ipynb
+│ ├── 02_CrossEncoder_Modeling.ipynb
+│ ├── 03_Ensemble_and_Calibration.ipynb
+├── models/
+│ ├── deberta-large/
+│ ├── ensemble/
+├── results/
+│ ├── confusion_matrix.png
+│ ├── leaderboard_submission.csv
+├── README.md
+└── requirements.txt
+
+
+
+
+---
+
+## 🏆 Authors
+**Team:** Georgia Tech 
+**Members:** Subhajit Bag, Sohan Pradhan, Aditya Ghosh, Deepak Alagusubramanian
+
+---
+
+## 🔗 Links
+- [Data4Good Official Page](https://www.datacamp.com/event/data4goodcompetition)  
+- [LinkedIn: Data4Good Analytics](https://www.linkedin.com/company/data4good-analytics)  
+- [Organizer: Purdue University / INFORMS / Johns Hopkins Carey Business School](https://informs.org/)
+
+---
+
+> “Factual AI builds trust. Every correct prediction here is a step toward reliable digital learning.”
+
+
