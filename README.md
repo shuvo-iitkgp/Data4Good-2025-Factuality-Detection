@@ -60,7 +60,7 @@ This project builds an **end-to-end NLP pipeline** to classify AI-generated answ
 ---
 
 ## 📁 Repository Structure
-
+```
 ├── data/
 │ ├── train.json
 │ ├── test.json
@@ -76,7 +76,7 @@ This project builds an **end-to-end NLP pipeline** to classify AI-generated answ
 │ ├── leaderboard_submission.csv
 ├── README.md
 └── requirements.txt
-
+```
 
 
 
