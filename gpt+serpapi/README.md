@@ -1,1 +1,1 @@
-GPT-5-mini outputs
+GPT-5-mini and SerpAPI outputs
