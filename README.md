@@ -1,101 +1,132 @@
-# 🧠 Data4Good-2025-Factuality-Detection
+# Data4Good 2025 — Factuality Verification via NLI Reframing
 
-Detecting factuality in AI-generated educational responses using transformer-based models and retrieval-augmented context understanding.  
-This project was developed for the **Data4Good 2025 Competition** — a national analytics challenge organized by **Purdue University**, **Johns Hopkins Carey Business School**, and **INFORMS**.
+**Regional Champions | Data4Good 2025**  
+**Final Test Score: 99.11% Balanced Accuracy**
 
----
-
-## 🌍 Overview
-
-Large Language Models (LLMs) are transforming education but also risk spreading misinformation through confident yet incorrect answers.  
-This project builds an **end-to-end NLP pipeline** to classify AI-generated answers as:
-
-- ✅ **Factual** — the answer is correct and grounded in context  
-- ❌ **Contradiction** — the answer conflicts with known facts  
-- 🚫 **Irrelevant** — the answer is unrelated to the question  
+This repository contains our winning solution to the **Data4Good 2025 National Analytics Competition**, focused on detecting factual errors in AI-generated educational responses.  
+The core contribution is a **problem reframing**: treating factuality verification as a **Natural Language Inference (NLI)** task, combined with selective LLM arbitration for ambiguous cases.
 
 ---
 
-## ⚙️ Key Highlights
+## Problem Context
 
-- **Modeling Approach:**  
-  - Retrieval-augmented context selection (BM25 + semantic ranking)  
-  - Cross-Encoder using **DeBERTa-v3 Large** for multi-class factuality classification  
-  - Auxiliary NLI task to improve contradiction detection  
-  - Two-stage cascade: Irrelevance filter → Factual vs. Contradiction classifier  
-  - Class-balanced **Focal Loss** and **Temperature Calibration**
+Large language models increasingly assist learners, but confidently stated incorrect answers pose serious risks in education.  
+The task is to classify AI-generated responses as:
 
-- **Evaluation:**  
-  Custom weighted confusion-matrix scoring — equal emphasis on each class (factual / contradiction / irrelevant).
+- **Factual** — supported by provided context  
+- **Contradiction** — conflicts with known facts  
+- **Irrelevant** — unrelated or unsupported  
 
-- **Dataset:**  
-  21K training and 2K test examples of (question, context, answer) triplets provided by the Data4Good 2025 organizing committee.
-
-- **Results:**  
-  +9 pp macro-F1 improvement over baselines; strongest gains on minority classes (contradiction, irrelevant).
+Naive classification approaches fail due to missing context, ambiguity, and distributional quirks in real educational data.
 
 ---
 
-## 🧩 Tech Stack
+## Key Insight
 
-**Python**, **PyTorch**, **Transformers (HuggingFace)**, **scikit-learn**, **BM25 / Rank-BM25**, **Pandas**, **Matplotlib**
+**Factuality verification is not a flat classification problem.**  
+It is an *inference problem* between a claim and its context.
 
----
-
-## 📊 Competition Context
-
-- Organized by: *Purdue University* x *Johns Hopkins Carey Business School* x *INFORMS*  
-- Theme: *AI for Education & Trustworthiness*  
-- Goal: Develop responsible AI solutions to ensure factual integrity in digital learning environments  
-- Regional Winners → National Championship (Johns Hopkins, Washington D.C.)
+Reframing the task as **Natural Language Inference (entailment / contradiction / neutral)** revealed structure that standard classifiers miss and enabled consistent generalization across edge cases.
 
 ---
 
-## 🧠 Learning Takeaways
+## Solution Overview
 
-- Hands-on experience with **LLM factuality detection** and **hallucination mitigation**  
-- Explored **retrieval-augmented classification** and **context-window optimization**  
-- Built explainable, reproducible NLP pipelines with documented CV and calibration
+Our system uses a **controlled, two-regime pipeline**:
 
----
+1. **NLI Backbone (Primary Path)**  
+   - DeBERTa-v3 Large fine-tuned for inference between answer and context  
+   - High confidence and stability when sufficient context exists
 
-## 📁 Repository Structure
-```
-├── data/
-│ ├── train.json
-│ ├── test.json
-├── notebooks/
-│ ├── 01_EDA_and_Baseline.ipynb
-│ ├── 02_CrossEncoder_Modeling.ipynb
-│ ├── 03_Ensemble_and_Calibration.ipynb
-├── models/
-│ ├── deberta-large/
-│ ├── ensemble/
-├── results/
-│ ├── confusion_matrix.png
-│ ├── leaderboard_submission.csv
-├── README.md
-└── requirements.txt
-```
+2. **LLM Arbitration (Selective Path)**  
+   - Activated only for ambiguous or no-context samples  
+   - Used as a *judge*, not a generator  
+   - Reduces brittle false positives without inflating cost
 
+3. **Explicit Decision Logic**  
+   - Context presence is treated as a first-class signal  
+   - No silent assumptions, no blind ensembling
 
+This design prioritizes **causality, robustness, and deployability** over brute-force tuning.
 
 ---
 
-## 🏆 Authors
-**Team:** Georgia Tech 
+## Dataset
 
-**Members:** Subhajit Bag, Soham Pradhan, Aditya Ghosh, Deepak Alagusubramanian
-
----
-
-## 🔗 Links
-- [Data4Good Official Page](https://www.datacamp.com/event/data4goodcompetition)  
-- [LinkedIn: Data4Good Analytics](https://www.linkedin.com/company/data4good-analytics)  
-- [Organizer: Purdue University / INFORMS / Johns Hopkins Carey Business School](https://informs.org/)
+- ~21,000 training samples  
+- ~2,000 held-out test samples  
+- Each sample consists of `(question, context, AI answer, label)`  
+- ~9% of samples contain **no usable context**, a key failure mode addressed explicitly
 
 ---
 
-> “Factual AI builds trust. Every correct prediction here is a step toward reliable digital learning.”
+## Evaluation Protocol
 
+- **Primary metric:** Balanced Accuracy  
+- Cross-validation with strict train/validation separation  
+- Drift checks between train and test distributions  
+- Final leaderboard score aligned with offline validation
+
+---
+
+## Results
+
+- **Final Test Performance:** 99.11% balanced accuracy  
+- **Validation Performance:** 99.78%  
+- **Error Reduction:** 96% reduction vs baseline  
+- **Rank:** 1st place (Regional Champions)
+
+Performance gains were driven by *problem structure*, not model size escalation.
+
+
+---
+
+## What This Repository Is (and Is Not)
+
+**This is:**
+- A principled, end-to-end solution to factuality verification  
+- A demonstration of correct task framing under ambiguity  
+- A reproducible competition-grade pipeline
+
+**This is not:**
+- A prompt-engineering demo  
+- A leaderboard-only hack  
+- A model zoo
+
+---
+
+## Limitations
+
+- Some samples are genuinely ambiguous even for humans  
+- The LLM arbitration step depends on external APIs  
+- Not designed for open-ended generation tasks
+
+These limits are explicit and intentional.
+
+---
+
+## Team
+
+**Georgia Institute of Technology**  
+- Subhajit Bag  
+- Soham Pradhan  
+- Aditya Ghosh  
+- Deepak Alagusubramanian  
+
+---
+
+## Competition
+
+**Data4Good 2025**  
+Organized by **Purdue University**, **Johns Hopkins Carey Business School**, and **INFORMS**  
+Theme: *Trustworthy AI for Education*  
+National Finals: Johns Hopkins, Washington DC
+
+---
+
+> Correct answers build trust.  
+> Correct *reasoning* sustains it.
+
+
+## Repository Structure
 
