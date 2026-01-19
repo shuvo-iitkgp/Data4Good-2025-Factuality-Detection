@@ -1,0 +1,4 @@
+metric,percent
+% samples with empty or near-empty context,8.89
+% samples where multiple labels would be defensible (proxy via baseline uncertainty),27.4
+% samples where answer mentions entities absent from context (heuristic),25.52
